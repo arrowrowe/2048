@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Loading...</title>
+  <style>
+    .deck {
+      background-color: burlywood;
+      margin: auto;
+      position: relative;
+      text-align: center;
+    }
+
+    .grid {
+      position: absolute;
+      -webkit-transition: left 0.2s ease-in-out, top 0.2s ease-in-out, opacity 0.5s ease-in-out;
+         -moz-transition: left 0.2s ease-in-out, top 0.2s ease-in-out, opacity 0.5s ease-in-out;
+           -o-transition: left 0.2s ease-in-out, top 0.2s ease-in-out, opacity 0.5s ease-in-out;
+              transition: left 0.2s ease-in-out, top 0.2s ease-in-out, opacity 0.5s ease-in-out;
+    }
+
+    .grid-last {
+      opacity: 0.2;
+    }
+  </style>
+</head>
+<body>
+  <p id="mordern-only">Supports Latest Mordern Browsers Only.</p>
+  <div class="deck" id="container"></div>
+  <script src="util.js"></script>
+  <script src="game.js"></script>
+  <script>
+    {
+      'use strict';
+      document.getElementById('mordern-only').remove();
+      const size = parseInt((location.search.match(/[?&]n=(\d+)/) || [])[1] || 4);
+      const $container = document.getElementById('container');
+      const game = window.game = new Game({
+        size, $container,
+        margin: 2,
+        timeoutForMove: 200,
+        fnOver: () => alert('Game over. Refresh to try again.')
+      });
+
+      {
+        const $appSizeStyle = Util.insertStyle('');
+        const resize = () => {
+          const deckWidth = Math.min(innerWidth, innerHeight) - 24;
+          $container.style.width = $container.style.height = deckWidth + 'px';
+          $container.style.marginTop = (innerHeight - deckWidth) / 2 + 'px';
+          const gridWidth = deckWidth * game.gridWidth / 100;
+          $appSizeStyle.innerText = `.grid {
+            line-height: ${gridWidth}px;
+            font-size: ${gridWidth * 0.4 }px;
+          }`;
+        };
+        resize();
+        addEventListener('resize', resize);
+      }
+
+      addEventListener('keydown', event => event.ctrlKey || event.shiftKey || event.altKey || event.metaKey || game.act({
+        38: 'up', 40: 'down', 37: 'left', 39: 'right',
+        87: 'up', 83: 'down', 65: 'left', 68: 'right',
+        73: 'up', 75: 'down', 74: 'left', 76: 'right'
+      }[event.keyCode]));
+
+      document.title = '2048!';
+    }
+  </script>
+</body>
+</html>
