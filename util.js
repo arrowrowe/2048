@@ -49,8 +49,6 @@ class Util {
   }
 
   static randomFromStream(size, stream) {
-    if (size === 0)
-      return null;
     for (let element of stream)
       if (Math.random() * (size--) < 1)
         return element;
